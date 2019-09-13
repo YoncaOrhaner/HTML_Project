@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+</head>
+<body>
+
+<style>
+    .tablo{width:1200px;}
+    .gun{padding:10px;float:left;width:100px;text-align:center}
+    .gun strong{display:block}
+    .gun label{
+        display:block;
+        border:1px solid #0ff;
+        border-radius:4px;
+        margin:2px}
+    .gun input{float:left;margin-left:5px}
+</style>
+
+<script type="text/javascript">
+var saat= ["08:00","08:15","08:30","08:45","09:00","09:15","09:30","09:45","10:00","10:15","10:30","10:45","11:00","11:15","11:30","11:45","13:00","13:15","13:30","13:45","14:00","14:15","14:30","14:45","15:00","15:15","15:30","15:45","16:00","16:15","16:30","16:45"]
+
+var gunler_tr = ["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
+
+function ikile(rakam){
+    if(rakam<10){rakam="0"+rakam}
+    return rakam;
+}
+
+function TarihiBol(tarih){
+    var gun = ikile(tarih.getDate());
+    var ay = ikile(tarih.getMonth()+1);
+    var yil = tarih.getFullYear();  
+    var gunayyil = gun+"/"+ay+"/"+yil;
+    return gunayyil;
+}
+function referans(tarih){
+    var gun = ikile(tarih.getDate());
+    var ay = ikile(tarih.getMonth()+1);
+    var yil = tarih.getFullYear();  
+    var gunayyil = gun+""+ay+""+yil;
+    return gunayyil;
+}
+
+function sil(rezerve){
+    var r = rezerve.split(",");
+	for (i = 0; i < r.length; i++) {
+		$("#r"+r[i]).attr('disabled', 'disabled');
+	}
+
+}
+
+jQuery(document).ready(function ($) {
+
+    var gunler="";
+    var haftasonu=0;
+
+ for(i=0 ; i<10 ; i++) {
+    var bugun = new Date(new Date().getTime()+(86400000*(i+haftasonu)) );
+    if (bugun.getDay()==6){
+        haftasonu=haftasonu+2;
+        var bugun = new Date(new Date().getTime()+(86400000*(i+haftasonu)) );
+    }
+
+    saatler="";
+    for(s=1;s<33;s++){
+        saatler=saatler+"<label><input type='radio' name='RefId' value='"+referans(bugun)+""+s+"' id='r"+referans(bugun)+""+s+"'>"+saat[s-1]+"</label>";
+    }
+
+    var gunler = gunler+"<div class='gun'>"+TarihiBol(bugun)+"<strong>"+gunler_tr[bugun.getDay()]+"</strong>"+saatler+"</div>";
+ } 
+
+
+var tablo = gunler;
+
+    $("#tablo1").html(tablo);
+
+});
+
+</script>
+
+<script type="text/javascript">
+$(document).on("DOMNodeInserted",function(){
+    sil("290420193,290420194,290420198,300420191,");
+})
+</script>
+    
+<div id="tablo1" class="tablo">
+
+</div>
+
+<!-- Code injected by live-server -->
+<script type="text/javascript">
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script></body>
+</html>
